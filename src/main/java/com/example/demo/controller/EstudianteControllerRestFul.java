@@ -7,37 +7,58 @@ import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 //API: por el proyecto java
 
 //Servicio-> Controller: Clase Controller
 
-@RestController  //Servicio
+@RestController // Servicio
 @RequestMapping(path = "/estudiantes")
 public class EstudianteControllerRestFul {
 	@Autowired
 	private IEstudianteService iEstudianteService;
-	
-	//Metodos: capacidades
+
+	// Metodos: capacidades
 	@PostMapping(path = "/guardar")
 	public void guardar(@RequestBody Estudiante estudiante) {
 		this.iEstudianteService.guardar(estudiante);
-		
-	}
-	//http://localhost:8080/API/v1.0/Matricula/estudiantes/guardar
 
-	//para decirle que va a manejar el verbo GET con la anotacion
+	}
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/guardar
+
+	// para decirle que va a manejar el verbo GET con la anotacion
 	@GetMapping(path = "/buscar")
 	public Estudiante buscar() {
 		return this.iEstudianteService.buscar(1);
 	}
-	
-	//http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
-	
-	
+
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
+
+	@PutMapping(path = "/actualizar")
+	public void actualizar(@RequestBody Estudiante estudiante) {
+		this.iEstudianteService.actualizar(estudiante);
+
+		// http://localhost:8080/API/v1.0/Matricula/estudiantes/actualizar
+	}
+
+	@PatchMapping(path = "/actualizarParcial")
+	public void actualizarParcial(@RequestBody Estudiante estudiante) {
+		this.iEstudianteService.actualizarParcial(estudiante.getApellido(), estudiante.getNombre(), estudiante.getId());
+		
+		//http://localhost:8080/API/v1.0/Matricula/estudiantes/actualizarParcial
+	}
+	@DeleteMapping(path = "/borrar")
+	public void borrar() {
+		this.iEstudianteService.eliminar(6);
+		
+		//http://localhost:8080/API/v1.0/Matricula/estudiantes/borrar
+	}
+
 }
