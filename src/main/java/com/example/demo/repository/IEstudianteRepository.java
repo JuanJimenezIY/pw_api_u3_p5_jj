@@ -1,5 +1,7 @@
 package com.example.demo.repository;
 
+import java.util.List;
+
 import com.example.demo.repository.modelo.Estudiante;
 
 public interface IEstudianteRepository {
@@ -13,5 +15,10 @@ public interface IEstudianteRepository {
 	
 	public Estudiante seleccionar(Integer id);
 	public void eliminar(Integer id);
+	
+	//implemetnar una capacidad que permita consultar todo 
+	
+	
+	public List<Estudiante> seleccionarTodos(String genero);
 
 }
