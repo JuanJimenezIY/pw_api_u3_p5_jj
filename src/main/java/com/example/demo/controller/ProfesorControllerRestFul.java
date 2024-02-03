@@ -24,45 +24,47 @@ public class ProfesorControllerRestFul {
 	@Autowired
 	private IProfesorService iProfesorService;
 
-	@PostMapping(path = "/guardar")
+	@PostMapping
 	public void guardar(@RequestBody Profesor profesor) {
 		this.iProfesorService.guardar(profesor);
 
 	}
-	
+
 	// http://localhost:8080/API/v1.0/Nomina/profesores/guardar
 
-	@PutMapping(path = "/actualizar")
-	public void actualizar(@RequestBody Profesor profesor) {
+	@PutMapping(path = "/{id}")
+	public void actualizar(@RequestBody Profesor profesor, @PathVariable Integer id) {
+		profesor.setId(id);
 		this.iProfesorService.actualizar(profesor);
 
 	}
 
-	@PatchMapping(path = "/actualizarParcial")
-	public void actualizarParcial(@RequestBody Profesor profesor) {
+	@PatchMapping(path = "/{id}")
+	public void actualizarParcial(@RequestBody Profesor profesor,@PathVariable Integer id) {
+		profesor.setId(id);
 		this.iProfesorService.actualizarParcial(profesor.getNombre(), profesor.getHorario(), profesor.getMateria(),
-				profesor.getId());
+				id);
 
 	}
 
-	@GetMapping(path = "/buscar/{id}")
+	@GetMapping(path = "/{id}")
 	public Profesor buscar(@PathVariable Integer id) {
 		return this.iProfesorService.buscar(id);
 
 	}
 
-	@DeleteMapping(path = "/borrar/{id}")
+	@DeleteMapping(path = "/{id}")
 	public void borrar(@PathVariable Integer id) {
 		this.iProfesorService.eliminar(id);
 
 	}
 
-	@GetMapping(path = "/consultarTodos")
-	public List<Profesor> consultarTodos(@RequestParam String horario) {
+	@GetMapping
+	public List<Profesor> consultarTodos(@RequestParam(required = false, defaultValue = "matutino") String horario) {
 
 		return this.iProfesorService.consultarTodos(horario);
 
 	}
-	
+
 	// http://localhost:8080/API/v1.0/Nomina/profesores/consultarTodos?horario=matutino
 }
