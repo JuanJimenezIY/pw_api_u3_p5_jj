@@ -3,6 +3,10 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,7 +28,7 @@ public class ProfesorControllerRestFul {
 	@Autowired
 	private IProfesorService iProfesorService;
 
-	@PostMapping
+	@PostMapping(consumes = MediaType.APPLICATION_XML_VALUE )
 	public void guardar(@RequestBody Profesor profesor) {
 		this.iProfesorService.guardar(profesor);
 
@@ -32,14 +36,14 @@ public class ProfesorControllerRestFul {
 
 	// http://localhost:8080/API/v1.0/Nomina/profesores/guardar
 
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_XML_VALUE)
 	public void actualizar(@RequestBody Profesor profesor, @PathVariable Integer id) {
 		profesor.setId(id);
 		this.iProfesorService.actualizar(profesor);
 
 	}
 
-	@PatchMapping(path = "/{id}")
+	@PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_XML_VALUE)
 	public void actualizarParcial(@RequestBody Profesor profesor,@PathVariable Integer id) {
 		profesor.setId(id);
 		this.iProfesorService.actualizarParcial(profesor.getNombre(), profesor.getHorario(), profesor.getMateria(),
@@ -47,9 +51,12 @@ public class ProfesorControllerRestFul {
 
 	}
 
-	@GetMapping(path = "/{id}")
-	public Profesor buscar(@PathVariable Integer id) {
-		return this.iProfesorService.buscar(id);
+	@GetMapping(path = "/{id}", produces = "application/xml")
+	public ResponseEntity<Profesor> buscar(@PathVariable Integer id) {
+		
+		Profesor prof= this.iProfesorService.buscar(id);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(prof);
 
 	}
 
@@ -59,10 +66,14 @@ public class ProfesorControllerRestFul {
 
 	}
 
-	@GetMapping
-	public List<Profesor> consultarTodos(@RequestParam(required = false, defaultValue = "matutino") String horario) {
+	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+	public   ResponseEntity< List<Profesor>> consultarTodos(@RequestParam(required = false, defaultValue = "matutino") String horario) {
 
-		return this.iProfesorService.consultarTodos(horario);
+		
+		List<Profesor> profesores= this.iProfesorService.consultarTodos(horario);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_242", "Lista consultada de manera satisfactoria");
+		return new ResponseEntity<>(profesores, cabeceras,242) ;
 
 	}
 
