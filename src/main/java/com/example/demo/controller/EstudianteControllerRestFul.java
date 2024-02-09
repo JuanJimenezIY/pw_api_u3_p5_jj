@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
+import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteTO;
+import com.example.demo.service.to.MateriaTO;
 
 //API: por el proyecto java
 
@@ -30,6 +34,8 @@ import com.example.demo.service.IEstudianteService;
 public class EstudianteControllerRestFul {
 	@Autowired
 	private IEstudianteService iEstudianteService;
+	@Autowired
+	private IMateriaService iMateriaService;
 
 	// Path Variable
 	// http:pokemon.com/API/v1/jugadores/pokemon/consultar/1
@@ -63,7 +69,9 @@ public class EstudianteControllerRestFul {
 
 	//para consultar todo no necesito 
 	//@GetMapping(path = "/consultarTodos")
-	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+	
+	
+	@GetMapping(path = "/tmp", produces = MediaType.APPLICATION_XML_VALUE)
 	public  ResponseEntity<List<Estudiante>>  consultarTodos(@RequestParam(required = false,defaultValue = "masculino") String genero) {
 		
 		List<Estudiante> lista = this.iEstudianteService.consultarTodos(genero);
@@ -73,6 +81,8 @@ public class EstudianteControllerRestFul {
 		return new ResponseEntity<>(lista, cabeceras,242) ;
 		// http://localhost:8080/API/v1.0/Matricula/estudiantes/consultarTodos?genero=masculino&edad=100
 	}
+	
+	
 
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void actualizar(@RequestBody Estudiante estudiante,@PathVariable Integer id) {
@@ -95,6 +105,23 @@ public class EstudianteControllerRestFul {
 		this.iEstudianteService.eliminar(id);
 
 		// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} DELETE
+	}
+	
+	
+	//----HATEOAS
+	@GetMapping(  produces = MediaType.APPLICATION_JSON_VALUE)
+	public  ResponseEntity<List<EstudianteTO>>  consultarTodosHateoas() {
+		
+		List<EstudianteTO> lista = this.iEstudianteService.consultarTodosTO();
+		
+		return  ResponseEntity.status(HttpStatus.OK).body(lista);
+		// http://localhost:8080/API/v1.0/Matricula/estudiantes/1/materias GET 
+	}
+	@GetMapping(path = "/{id}/materias",produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<MateriaTO>> consultarMateriasPorId(@PathVariable Integer id) {
+		
+		List<MateriaTO> lista= this.iMateriaService.buscarPorIdEstudiante(id);
+		return ResponseEntity.status(HttpStatus.OK).body(lista);
 	}
 
 }
