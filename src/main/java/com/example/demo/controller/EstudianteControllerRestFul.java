@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
 import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteLigeroTO;
 import com.example.demo.service.to.EstudianteTO;
 import com.example.demo.service.to.MateriaTO;
 
@@ -55,7 +56,7 @@ public class EstudianteControllerRestFul {
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes
 
 	// para decirle que va a manejar el verbo GET con la anotacion
-	@GetMapping(path = "/{id}", produces = "application/json")
+	@GetMapping(path = "/self/{id}", produces = "application/json")
 	public ResponseEntity<EstudianteTO> buscar(@PathVariable Integer id) {
 
 		// 240: grupo satisfactorio
@@ -67,11 +68,9 @@ public class EstudianteControllerRestFul {
 		Link link = linkTo(methodOn(EstudianteControllerRestFul.class).consultarMateriasPorId(estu.getId()))
 				.withRel("materias");
 		
-		Link link2 = linkTo(methodOn(EstudianteControllerRestFul.class).buscar(estu.getId()))
-				.withSelfRel();
 		
 		estu.add(link);
-		estu.add(link2);
+	
 
 		return ResponseEntity.status(HttpStatus.OK).body(estu);
 		// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
@@ -82,7 +81,7 @@ public class EstudianteControllerRestFul {
 
 	@GetMapping(path = "/tmp", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Estudiante>> consultarTodos(
-			@RequestParam(required = false, defaultValue = "masculino") String genero) {
+		@RequestParam(required = false, defaultValue = "masculino") String genero) {
 
 		List<Estudiante> lista = this.iEstudianteService.consultarTodos(genero);
 		HttpHeaders cabeceras = new HttpHeaders();
@@ -141,6 +140,26 @@ public class EstudianteControllerRestFul {
 
 		List<MateriaTO> lista = this.iMateriaService.buscarPorIdEstudiante(id);
 		return ResponseEntity.status(HttpStatus.OK).body(lista);
+	}
+	
+	
+	@GetMapping(path = "/{id}", produces = "application/json")
+	public ResponseEntity<EstudianteLigeroTO> buscarLigero(@PathVariable Integer id) {
+
+
+		EstudianteLigeroTO estu = this.iEstudianteService.consultarTO(id);
+	
+
+	
+		
+		Link link = linkTo(methodOn(EstudianteControllerRestFul.class).buscar(estu.getId()))
+				.withSelfRel();
+		
+		;
+		estu.add(link);
+
+		return ResponseEntity.status(HttpStatus.OK).body(estu);
+		// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
 	}
 
 }
