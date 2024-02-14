@@ -58,11 +58,11 @@ public class IEstudianteRepositoryImpl implements IEstudianteRepository {
 	}
 
 	@Override
-	public List<Estudiante> seleccionarTodos(String genero) {
+	public List<Estudiante> seleccionarTodos() {
 		// TODO Auto-generated method stub
 		
-		TypedQuery<Estudiante> myQuery= this.entityManager.createQuery("SELECT e FROM Estudiante e WHERE e.genero = :variable",Estudiante.class);
-		myQuery.setParameter("variable", genero);
+		TypedQuery<Estudiante> myQuery= this.entityManager.createQuery("SELECT e FROM Estudiante e ",Estudiante.class);
+		
 		return myQuery.getResultList();
 		
 		

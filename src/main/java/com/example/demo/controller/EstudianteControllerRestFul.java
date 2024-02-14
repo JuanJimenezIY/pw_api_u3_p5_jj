@@ -81,9 +81,9 @@ public class EstudianteControllerRestFul {
 
 	@GetMapping(path = "/tmp", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Estudiante>> consultarTodos(
-		@RequestParam(required = false, defaultValue = "masculino") String genero) {
+		) {
 
-		List<Estudiante> lista = this.iEstudianteService.consultarTodos(genero);
+		List<Estudiante> lista = this.iEstudianteService.consultarTodos();
 		HttpHeaders cabeceras = new HttpHeaders();
 		cabeceras.add("mensaje_242", "Lista consultada de manera satisfactoria");
 		cabeceras.add("mensaje_info", "El sistema va a estar en mantenimiento el fin de semana");

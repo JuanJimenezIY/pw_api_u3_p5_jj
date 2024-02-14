@@ -19,6 +19,6 @@ public interface IEstudianteRepository {
 	//implemetnar una capacidad que permita consultar todo 
 	
 	
-	public List<Estudiante> seleccionarTodos(String genero);
+	public List<Estudiante> seleccionarTodos();
 
 }

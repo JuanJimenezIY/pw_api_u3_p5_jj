@@ -48,16 +48,16 @@ public class IEstudianteServiceImpl implements IEstudianteService {
 	}
 
 	@Override
-	public List<Estudiante> consultarTodos(String genero) {
+	public List<Estudiante> consultarTodos() {
 		// TODO Auto-generated method stub
-		return this.estudianteRepository.seleccionarTodos(genero);
+		return this.estudianteRepository.seleccionarTodos();
 	}
     //---Nivel 3 
 	@Override
 	public List<EstudianteTO> consultarTodosTO() {
 		// TODO Auto-generated method stub
 		
-		List<Estudiante> lista =this.estudianteRepository.seleccionarTodos("M");
+		List<Estudiante> lista =this.estudianteRepository.seleccionarTodos();
 		List<EstudianteTO> listaFinal= new ArrayList<>();
 		for(Estudiante est:lista) {
 			listaFinal.add(this.convertir(est));
