@@ -8,8 +8,8 @@ import com.example.demo.service.to.EstudianteTO;
 
 public interface IEstudianteService {
 
-	public void guardar(Estudiante estudiante);
-	public void actualizar(Estudiante estudiante);
+	public void guardar(EstudianteTO estudiante);
+	public void actualizar(EstudianteTO estudiante);
 	public void actualizarParcial(String apellido, String nombre ,Integer id);
 	
 	public Estudiante buscar(Integer id);

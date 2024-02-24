@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -35,6 +36,8 @@ import com.example.demo.service.to.MateriaTO;
 
 @RestController // Servicio
 @RequestMapping(path = "/estudiantes")
+@CrossOrigin
+//(value="http://localhost:8082/")
 public class EstudianteControllerRestFul {
 	@Autowired
 	private IEstudianteService iEstudianteService;
@@ -48,15 +51,8 @@ public class EstudianteControllerRestFul {
 
 	// Metodos: capacidades
 
-	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void guardar(@RequestBody Estudiante estudiante) {
-		this.iEstudianteService.guardar(estudiante);
-
-	}
-	// http://localhost:8080/API/v1.0/Matricula/estudiantes
-
 	// para decirle que va a manejar el verbo GET con la anotacion
-	@GetMapping(path = "/self/{id}", produces = "application/json")
+	@GetMapping(path = "/{id}", produces = "application/json")
 	public ResponseEntity<EstudianteTO> buscar(@PathVariable Integer id) {
 
 		// 240: grupo satisfactorio
@@ -75,6 +71,40 @@ public class EstudianteControllerRestFul {
 		return ResponseEntity.status(HttpStatus.OK).body(estu);
 		// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
 	}
+	
+	//CRUD
+	
+	@GetMapping(path = "/self/{id}", produces = "application/json")
+	public ResponseEntity<EstudianteLigeroTO> buscarLigero(@PathVariable Integer id) {
+
+
+		EstudianteLigeroTO estu = this.iEstudianteService.consultarTO(id);
+	
+
+	
+		
+		Link link = linkTo(methodOn(EstudianteControllerRestFul.class).buscar(estu.getId()))
+				.withSelfRel();
+		
+		;
+		estu.add(link);
+
+		return ResponseEntity.status(HttpStatus.OK).body(estu);
+		// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
+	}
+	
+	
+	
+	
+	
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public void guardar(@RequestBody EstudianteTO estudiante) {
+		this.iEstudianteService.guardar(estudiante);
+
+	}
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes
+
+
 
 	// para consultar todo no necesito
 	// @GetMapping(path = "/consultarTodos")
@@ -92,7 +122,7 @@ public class EstudianteControllerRestFul {
 	}
 
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void actualizar(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
+	public void actualizar(@RequestBody EstudianteTO estudiante, @PathVariable Integer id) {
 		estudiante.setId(id);
 		this.iEstudianteService.actualizar(estudiante);
 
@@ -143,23 +173,6 @@ public class EstudianteControllerRestFul {
 	}
 	
 	
-	@GetMapping(path = "/{id}", produces = "application/json")
-	public ResponseEntity<EstudianteLigeroTO> buscarLigero(@PathVariable Integer id) {
-
-
-		EstudianteLigeroTO estu = this.iEstudianteService.consultarTO(id);
 	
-
-	
-		
-		Link link = linkTo(methodOn(EstudianteControllerRestFul.class).buscar(estu.getId()))
-				.withSelfRel();
-		
-		;
-		estu.add(link);
-
-		return ResponseEntity.status(HttpStatus.OK).body(estu);
-		// http://localhost:8080/API/v1.0/Matricula/estudiantes/{id} GET
-	}
 
 }
